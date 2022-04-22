@@ -11,16 +11,29 @@ router = APIRouter(
 
 @router.get('/cats')
 def get_cat_fact():
-    req = requests.get(api.url_cat)
-    req = req.json()
-    rec = [{
+    req = api.fact_ab_cat()
+    doc = [{
         "local time" : api.get_time(),
-        "fact" : req['fact']
+        "fact" : req['fact'],
+        "length" : req['length']
     }]
-    mydb.facts.insert_many(rec)
+    mydb.facts.insert_many(doc)
     return req['fact']
 
-@router.get('/all')
+@router.get('/activity')
+def get_activity():
+    req = api.activity()
+    doc = [{
+        "activity" : req['activity'],
+        "participants" : req['participants'],
+        "price" : req['price'],
+        "accessibility" : req['accessibility'],
+        "local time" : api.get_time()
+    }]
+    mydb.activity.insert_many(doc)
+    return req
+
+@router.get('/all_facts')
 def get_db_facts():
     facts_dic: dict = {}
     i = 0
@@ -32,3 +45,17 @@ def get_db_facts():
                 'local time' : fact['local time']
             }})
     return facts_dic
+
+@router.get('/all_activites')
+def get_db_activities():
+    activities_dict: dict = {}
+    i = 0
+    for activity in list(mydb.activity.find({})):
+        i += 1
+        activities_dict.update({
+            i : {
+                "activity" : activity['activity'],
+                "local time" : activity['local time']
+            }
+        })
+    return activities_dict
