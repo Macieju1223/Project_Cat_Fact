@@ -20,14 +20,14 @@ services:
       - '27017:27017'
     networks:
       - project_cat
-    # volumes:
-    #   - pcf_01_cat_db
+    volumes:
+      - pcf_01_cat_db:/data/db
     # environment:
     #   MONGO_INITDB_ROOT_USERNAME: root
     #   MONGO_INITDB_ROOT_PASSWORD: abc
 
-# volumes:
-#   pcf_02_cat_db:
+volumes:
+  pcf_01_cat_db:
 
 networks:
   project_cat:
