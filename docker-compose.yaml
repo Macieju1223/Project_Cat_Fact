@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+
+  cat_app:
+    image: pcf_02
+    container_name: cat_app
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mongo_db
+    networks:
+      - project_cat   
+
+  mongo_db:
+    image: mongo
+    container_name: mongo_db
+    restart: always
+    ports:
+      - '27017:27017'
+    networks:
+      - project_cat
+    volumes:
+      - pcf_01_cat_db:/data/db
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: abc
+
+volumes:
+  pcf_01_cat_db:
+
+networks:
+  project_cat:
+    driver: bridge
