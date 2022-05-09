@@ -4,6 +4,7 @@ services:
 
   cat_app:
     image: pcf_02
+    restart: always
     container_name: cat_app
     ports:
       - '8080:8080'
