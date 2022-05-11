@@ -27,7 +27,7 @@ pipeline {
         }
         stage('build pcf_02 app'){
             steps{
-                sh "docker run -d --network project_cat_facts -p 8080:8080 pcf_02"
+                sh "docker run -d --network project_cat_facts -p 8090:8090 pcf_02"
             }
         }
         stage('killing all'){
