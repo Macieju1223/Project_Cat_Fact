@@ -7,12 +7,17 @@ pipeline {
                 sh "docker build . -t pcf_02"
                 echo "build complete"
             }
+        }
         stage('create docker network'){
-            sh "docker network create -d bridge project_cat_facts"
+            steps {
+                sh "docker network create -d bridge project_cat_facts"
+            }
         }
         stage('Dwonload mongo_db image'){
-            sh "docker pull mongodb:lts"
-            echo "download complete"
+            steps {
+                sh "docker pull mongodb:lts"
+                echo "download complete"
+            }
         }
         stage('Build mongo_db'){
             steps {
@@ -26,9 +31,10 @@ pipeline {
             }
         }
         stage('killing all'){
-            sh "docker kill pcf_02 mongo_db"
-            sh "docker container prune"
-        }
+            steps{
+                sh "docker kill pcf_02 mongo_db"
+                sh "docker container prune"
+            }
         }
     }
 }
