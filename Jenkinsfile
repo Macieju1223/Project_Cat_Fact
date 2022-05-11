@@ -1,33 +1,34 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_HUB_PASSWORD = credentials('DOCKER_HUB_PASSWORD')
-    }
-
     stages {
-        stage('Wyczyszczenie działających aplikacji') {
+        stage('Build dockerfile') {
             steps {
-                sh 'docker-compose down || true'
+                sh "docker build . -t pcf_02"
+                echo "build complete"
+            }
+        stage('create docker network'){
+            sh "docker network create -d bridge project_cat_facts"
+        }
+        stage('Dwonload mongo_db image'){
+            sh "docker pull mongodb:lts"
+            echo "download complete"
+        }
+        stage('Build mongo_db'){
+            steps {
+                sh "docker run -p 27017:27017 --name mongo_db --network project_cat_facts -d mongodb"
+            }
+
+        }
+        stage('build pcf_02 app'){
+            steps{
+                sh "docker run -d --network project_cat_facts -p 8080:8080 pcf_02"
             }
         }
-        stage('Budowa obrazu Dockera') {
-            steps {
-                sh "docker build . -t pcf_02:${BUILD_NUMBER}"
-            }
+        stage('killing all'){
+            sh "docker kill pcf_02 mongo_db"
+            sh "docker container prune"
         }
-        stage('Uruchomienie aplikacji') {
-            steps {
-                sh "docker-compose up"
-            }
-        }
-        stage('Wrzucenie obrazu dockera do Docker Huba') {
-            steps {
-                sh "docker login -u murbaniaktkh -p ${DOCKER_HUB_PASSWORD}"
-                sh "docker tag pcf_02:${BUILD_NUMBER} bmarkowskii/flask_app:${BUILD_NUMBER}"
-                sh 'docker tag pcf_02:latest bmarkowskii/flask_app:latest'
-                sh "docker push murbaniaktkh/jenkins_test:${BUILD_NUMBER}"
-            }
         }
     }
 }
