@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Build mongo_db'){
             steps {
-                sh "docker run -p 27017:27017 --name mongo_db --network project_cat_facts -d mongodb"
+                sh "docker run -p 27017:27017 --name mongo_db --network project_cat_facts -d mongo"
             }
 
         }
