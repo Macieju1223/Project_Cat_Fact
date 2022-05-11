@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build dockerfile') {
             steps {
-                sh "docker build . -t pcf_02"
+                sh "docker build . -t pcf_02:{BUILD_NUMBER}"
                 echo "build complete"
             }
         }
@@ -27,12 +27,13 @@ pipeline {
         }
         stage('build pcf_02 app'){
             steps{
-                sh "docker run -d --network project_cat_facts -p 8090:8090 pcf_02"
+                sh "docker run -d --network project_cat_facts --name pcf_02 pcf_02"
             }
         }
         stage('killing all'){
             steps{
                 sh "docker kill pcf_02 mongo_db"
+                sh "docker rm -f pcf_02 mongo"
                 sh "docker container prune"
                 sh "docker network rm project_cat_facts"
             }
