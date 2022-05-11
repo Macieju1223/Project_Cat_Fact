@@ -34,6 +34,7 @@ pipeline {
             steps{
                 sh "docker kill pcf_02 mongo_db"
                 sh "docker container prune"
+                sh "docker network rm project_cat_facts"
             }
         }
     }
