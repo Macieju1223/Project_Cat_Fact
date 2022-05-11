@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Dwonload mongo_db image'){
             steps {
-                sh "docker pull mongodb:lts"
+                sh "docker pull mongo"
                 echo "download complete"
             }
         }
