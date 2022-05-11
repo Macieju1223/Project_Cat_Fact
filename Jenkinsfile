@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build dockerfile') {
             steps {
-                sh "docker build . -t pcf_02:{BUILD_NUMBER}"
+                sh "docker build . -t pcf_02"
                 echo "build complete"
             }
         }
